@@ -136,22 +136,14 @@
             let t = typeStr.toLowerCase().trim();
             if (t.includes('mundo')) return { label: 'Descargar Mundo', css: 'link-mundo' };
             if (t.includes('addon')) return { label: 'Descargar Addon', css: 'link-addon' };
-            if (t.includes('mod')) return { label: 'Descargar Mod', css: 'link-mod' };
+            if (t.includes('mod')) return { label: 'Visitar Mod', css: 'link-mod' };
             if (t.includes('textura')) return { label: 'Descargar Textura', css: 'link-textura' };
-            if/t.includes('skin')) return { label: 'Descargar Skin', css: 'link-skin' };
+            if (t.includes('skin')) return { label: 'Descargar Skin', css: 'link-skin' };
             return { label: `Descargar ${typeStr}`, css: '' };
         }
 
         function formatDownloadLink(url) {
             let cleanUrl = url.trim();
-            if (cleanUrl.includes('pixeldrain.com/u/')) {
-                let parts = cleanUrl.split('/u/');
-                if (parts.length > 1) {
-                    let fileId = parts[1].split('?')[0];
-                    return `https://pixeldrain.com/api/file/${fileId}?download`;
-                }
-            }
-            // Usamos export=view también para los enlaces de descarga de Drive para evitar que pida correo/permisos molestos
             if (cleanUrl.includes('drive.google.com')) {
                 let match = cleanUrl.match(/\/d\/([a-zA-Z0-9_-]+)/) || cleanUrl.match(/id=([a-zA-Z0-9_-]+)/);
                 if (match && match[1]) {
@@ -178,7 +170,8 @@
                     const links = item.link.toString().split(',').map(l => l.trim()).filter(l => l !== '');
                     links.forEach((cleanLink) => {
                         let finalUrl = formatDownloadLink(cleanLink);
-                        linksHtml += `<a href="${finalUrl}" target="_blank" class="${getStyleAndLabel(tipoOriginal).css}">${getStyleAndLabel(tipoOriginal).label}</a>`;
+                        let config = getStyleAndLabel(tipoOriginal);
+                        linksHtml += `<a href="${finalUrl}" target="_blank" class="${config.css}">${config.label}</a>`;
                     });
                 }
 
