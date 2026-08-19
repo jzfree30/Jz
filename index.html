@@ -142,6 +142,20 @@
             return { label: `Descargar ${typeStr}`, css: '' };
         }
 
+        function formatDownloadLink(url, typeStr) {
+            let cleanUrl = url.trim();
+            let t = typeStr.toLowerCase().trim();
+
+            // Si es de Google Drive y NO es mod, forzamos la descarga directa
+            if (cleanUrl.includes('drive.google.com') && !t.includes('mod')) {
+                let match = cleanUrl.match(/\/d\/([a-zA-Z0-9_-]+)/) || cleanUrl.match(/id=([a-zA-Z0-9_-]+)/);
+                if (match && match[1]) {
+                    return `https://drive.google.com/uc?export=download&id=${match[1]}`;
+                }
+            }
+            return cleanUrl;
+        }
+
         function renderList() {
             const listDiv = document.getElementById('contentList');
             listDiv.innerHTML = '';
@@ -158,8 +172,15 @@
                 } else {
                     const links = item.link.toString().split(',').map(l => l.trim()).filter(l => l !== '');
                     links.forEach((cleanLink) => {
+                        let finalUrl = formatDownloadLink(cleanLink, tipoOriginal);
                         let config = getStyleAndLabel(tipoOriginal);
-                        linksHtml += `<a href="${cleanLink}" target="_blank" class="${config.css}">${config.label}</a>`;
+                        
+                        // Si es mod se abre en pestaña nueva, si es descarga de Drive/archivo se descarga directo en la misma página
+                        let isMod = tipoOriginal.toLowerCase().includes('mod');
+                        let targetAttr = isMod ? 'target="_blank"' : '';
+                        let downloadAttr = isMod ? '' : 'download';
+
+                        linksHtml += `<a href="${finalUrl}" ${targetAttr} ${downloadAttr} class="${config.css}">${config.label}</a>`;
                     });
                 }
 
