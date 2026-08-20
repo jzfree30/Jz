@@ -142,18 +142,23 @@
             return { label: `Descargar ${typeStr}`, css: '' };
         }
 
-        function formatDownloadLink(url, typeStr) {
+        function processLink(url) {
             let cleanUrl = url.trim();
-            let t = typeStr.toLowerCase().trim();
-
-            // Si es de Google Drive y NO es mod, forzamos la descarga directa
-            if (cleanUrl.includes('drive.google.com') && !t.includes('mod')) {
+            // Si es de Google Drive, lo transformamos a enlace de descarga directa automática
+            if (cleanUrl.includes('drive.google.com')) {
                 let match = cleanUrl.match(/\/d\/([a-zA-Z0-9_-]+)/) || cleanUrl.match(/id=([a-zA-Z0-9_-]+)/);
                 if (match && match[1]) {
-                    return `https://drive.google.com/uc?export=download&id=${match[1]}`;
+                    return {
+                        url: `https://drive.google.com/uc?export=download&id=${match[1]}`,
+                        isDirect: true
+                    };
                 }
             }
-            return cleanUrl;
+            // Si es Mediafire o externo, se queda como link normal para abrir pestaña
+            return {
+                url: cleanUrl,
+                isDirect: false
+            };
         }
 
         function renderList() {
@@ -171,16 +176,15 @@
                     linksHtml = `<a href="#" class="link-nodisp">No disponible</a>`;
                 } else {
                     const links = item.link.toString().split(',').map(l => l.trim()).filter(l => l !== '');
-                    links.forEach((cleanLink) => {
-                        let finalUrl = formatDownloadLink(cleanLink, tipoOriginal);
+                    links.forEach((rawLink) => {
+                        let linkInfo = processLink(rawLink);
                         let config = getStyleAndLabel(tipoOriginal);
                         
-                        // Si es mod se abre en pestaña nueva, si es descarga de Drive/archivo se descarga directo en la misma página
-                        let isMod = tipoOriginal.toLowerCase().includes('mod');
-                        let targetAttr = isMod ? 'target="_blank"' : '';
-                        let downloadAttr = isMod ? '' : 'download';
+                        // Si es Drive descarga directo aquí; si es Mediafire u otro abre pestaña nueva
+                        let targetAttr = linkInfo.isDirect ? '' : 'target="_blank"';
+                        let downloadAttr = linkInfo.isDirect ? 'download' : '';
 
-                        linksHtml += `<a href="${finalUrl}" ${targetAttr} ${downloadAttr} class="${config.css}">${config.label}</a>`;
+                        linksHtml += `<a href="${linkInfo.url}" ${targetAttr} ${downloadAttr} class="${config.css}">${config.label}</a>`;
                     });
                 }
 
