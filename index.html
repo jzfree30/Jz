@@ -5,52 +5,95 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>RADDCRAFT</title>
     <style>
+        * { box-sizing: border-box; }
         body { font-family: 'Segoe UI', Arial, sans-serif; background: #121212; color: #fff; margin: 0; padding: 15px; }
-        h1 { text-align: center; color: #00ffcc; margin-bottom: 20px; text-transform: uppercase; letter-spacing: 2px; }
         
-        .controls { display: flex; flex-direction: column; gap: 10px; max-width: 800px; margin: 0 auto 20px auto; }
-        input[type="text"] { padding: 12px; border-radius: 8px; border: none; font-size: 16px; background: #1e1e1e; color: #fff; border: 1px solid #333; }
+        /* Encabezado y Menú Hamburguesa */
+        header { display: flex; justify-content: space-between; align-items: center; max-width: 1000px; margin: 0 auto 20px auto; position: relative; }
+        h1 { color: #00ffcc; margin: 0; font-size: 24px; text-transform: uppercase; letter-spacing: 2px; }
         
-        .filters { display: flex; gap: 8px; flex-wrap: wrap; justify-content: center; }
-        .filters button { padding: 8px 16px; border: none; background: #222; color: #bbb; border-radius: 20px; cursor: pointer; transition: 0.3s; }
-        .filters button.active { background: #00ffcc; color: #000; font-weight: bold; }
+        .menu-btn { background: #222; border: 1px solid #444; color: #fff; font-size: 22px; padding: 6px 12px; border-radius: 8px; cursor: pointer; }
+        
+        /* Desplegable del menú de categorías */
+        .filters-dropdown {
+            display: none;
+            position: absolute;
+            right: 0;
+            top: 50px;
+            background: #1a1a1a;
+            border: 1px solid #333;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.5);
+            flex-direction: column;
+            gap: 5px;
+            padding: 10px;
+            z-index: 100;
+            min-width: 160px;
+        }
+        .filters-dropdown button {
+            background: transparent;
+            border: none;
+            color: #bbb;
+            padding: 10px;
+            text-align: left;
+            cursor: pointer;
+            border-radius: 6px;
+            font-size: 14px;
+        }
+        .filters-dropdown button:hover, .filters-dropdown button.active {
+            background: #00ffcc;
+            color: #000;
+            font-weight: bold;
+        }
 
+        /* Buscador */
+        .controls { max-width: 1000px; margin: 0 auto 20px auto; }
+        input[type="text"] { width: 100%; padding: 12px; border-radius: 8px; border: 1px solid #333; font-size: 16px; background: #1e1e1e; color: #fff; outline: none; }
+
+        /* Cuadrícula adaptativa PC y Android */
         .grid-container {
             display: grid;
             grid-template-columns: repeat(2, 1fr);
-            gap: 15px;
+            gap: 12px;
             max-width: 1000px;
             margin: 0 auto;
         }
         @media (min-width: 768px) {
-            .grid-container { grid-template-columns: repeat(4, 1fr); }
+            .grid-container { grid-template-columns: repeat(4, 1fr); gap: 15px; }
         }
 
-        .card { background: #1a1a1a; padding: 10px; border-radius: 12px; border: 1px solid #333; cursor: pointer; transition: 0.3s; }
-        .card:hover { border-color: #00ffcc; transform: translateY(-5px); }
-        .card img { width: 100%; height: 140px; object-fit: cover; border-radius: 8px; background: #222; }
-        .card h3 { font-size: 14px; margin: 10px 0 0 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; text-align: center; }
+        .card { background: #1a1a1a; padding: 10px; border-radius: 12px; border: 1px solid #333; cursor: pointer; transition: 0.3s; display: flex; flex-direction: column; }
+        .card:hover { border-color: #00ffcc; transform: translateY(-3px); }
+        .card img { width: 100%; height: 130px; object-fit: cover; border-radius: 8px; background: #222; }
+        .card h3 { font-size: 13px; margin: 10px 0 0 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; text-align: center; }
 
-        .modal-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.9); z-index: 1000; justify-content: center; align-items: center; padding: 20px; }
-        .modal-content { background: #222; width: 100%; max-width: 450px; padding: 25px; border-radius: 15px; position: relative; border: 1px solid #444; }
-        .modal-close { position: absolute; top: 10px; right: 15px; cursor: pointer; font-size: 30px; color: #fff; }
-        .modal-content img { width: 100%; height: 250px; object-fit: cover; border-radius: 10px; }
-        .btn-link { display: block; padding: 12px; margin-top: 10px; text-align: center; background: #007bff; color: #fff; text-decoration: none; border-radius: 8px; font-weight: bold; }
+        /* Modal */
+        .modal-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.9); z-index: 1000; justify-content: center; align-items: center; padding: 15px; }
+        .modal-content { background: #222; width: 100%; max-width: 400px; padding: 20px; border-radius: 15px; position: relative; border: 1px solid #444; }
+        .modal-close { position: absolute; top: 10px; right: 15px; cursor: pointer; font-size: 26px; color: #fff; }
+        .modal-content img { width: 100%; height: 200px; object-fit: cover; border-radius: 10px; }
+        .btn-link { display: block; padding: 12px; margin-top: 10px; text-align: center; background: #007bff; color: #fff; text-decoration: none; border-radius: 8px; font-weight: bold; font-size: 14px; }
         .btn-drive { background: #0f9d58; }
     </style>
 </head>
 <body>
 
-    <h1>RADDCRAFT</h1>
-
-    <div class="controls">
-        <input type="text" id="searchInput" placeholder="Buscar por nombre..." oninput="filterData()">
-        <div class="filters" id="filterButtons">
+    <header>
+        <h1>RADDCRAFT</h1>
+        <button class="menu-btn" onclick="toggleMenu()">☰</button>
+        <div class="filters-dropdown" id="menuDropdown">
             <button class="active" onclick="setCategory('ALL', this)">Todos</button>
             <button onclick="setCategory('Addon', this)">Addons</button>
             <button onclick="setCategory('Mod', this)">Mods</button>
             <button onclick="setCategory('Mundo', this)">Mundos</button>
+            <button onclick="setCategory('Textura', this)">Texturas</button>
+            <button onclick="setCategory('Skin', this)">Skins</button>
+            <button onclick="setCategory('Mashup', this)">Mashup</button>
         </div>
+    </header>
+
+    <div class="controls">
+        <input type="text" id="searchInput" placeholder="Buscar por nombre..." oninput="filterData()">
     </div>
 
     <div id="contentList" class="grid-container"></div>
@@ -59,8 +102,8 @@
         <div class="modal-content" onclick="event.stopPropagation()">
             <span class="modal-close" onclick="closeModal()">×</span>
             <img id="mImg" src="">
-            <h2 id="mTitle" style="color:#00ffcc; margin: 15px 0 5px 0;"></h2>
-            <p id="mDesc" style="color:#ccc; font-size: 14px; line-height: 1.4;"></p>
+            <h2 id="mTitle" style="color:#00ffcc; margin: 12px 0 5px 0; font-size: 18px;"></h2>
+            <p id="mDesc" style="color:#ccc; font-size: 13px; line-height: 1.4; max-height: 100px; overflow-y: auto;"></p>
             <div id="mLinks"></div>
         </div>
     </div>
@@ -75,23 +118,30 @@
                 const response = await fetch(JSON_URL);
                 allData = await response.json();
                 render(allData);
-            } catch (e) { document.getElementById('contentList').innerHTML = "<p style='text-align:center'>Error al cargar contenido.</p>"; }
+            } catch (e) { document.getElementById('contentList').innerHTML = "<p style='text-align:center; grid-column:1/-1;'>Error al cargar contenido.</p>"; }
         }
 
         function render(data) {
             const list = document.getElementById('contentList');
-            list.innerHTML = data.map(item => `
-                <div class="card" onclick="openModal(${JSON.stringify(item).replace(/"/g, '&quot;')})">
-                    <img src="${item.imagen || 'https://via.placeholder.com/150'}" onerror="this.src='https://via.placeholder.com/150'">
-                    <h3>${item.nombre || 'Sin nombre'}</h3>
-                </div>
-            `).join('');
+            if (data.length === 0) {
+                list.innerHTML = "<p style='text-align:center; grid-column:1/-1; color:#888;'>No se encontraron resultados.</p>";
+                return;
+            }
+            list.innerHTML = data.map(item => {
+                const imgSrc = (item.imagen && item.imagen.startsWith('http')) ? item.imagen : 'https://via.placeholder.com/150';
+                return `
+                    <div class="card" onclick="openModal(${JSON.stringify(item).replace(/"/g, '&quot;')})">
+                        <img src="${imgSrc}" referrerpolicy="no-referrer" loading="lazy" onerror="this.src='https://via.placeholder.com/150'">
+                        <h3>${item.nombre || 'Sin nombre'}</h3>
+                    </div>
+                `;
+            }).join('');
         }
 
         function openModal(item) {
             document.getElementById('mImg').src = item.imagen || 'https://via.placeholder.com/150';
             document.getElementById('mTitle').innerText = item.nombre || '';
-            document.getElementById('mDesc').innerText = item.descripcion || 'Sin descripción.';
+            document.getElementById('mDesc').innerText = item.descripcion || 'Sin descripción disponible.';
             
             let links = '';
             if (item.link) links += `<a href="${item.link}" target="_blank" class="btn-link">Descargar (Web)</a>`;
@@ -105,10 +155,16 @@
 
         function closeModal() { document.getElementById('itemModal').style.display = 'none'; }
         
+        function toggleMenu() {
+            const dropdown = document.getElementById('menuDropdown');
+            dropdown.style.display = dropdown.style.display === 'flex' ? 'none' : 'flex';
+        }
+
         function setCategory(cat, btn) {
             currentCategory = cat;
-            document.querySelectorAll('.filters button').forEach(b => b.classList.remove('active'));
+            document.querySelectorAll('.filters-dropdown button').forEach(b => b.classList.remove('active'));
             btn.classList.add('active');
+            toggleMenu(); // Cierra el menú al elegir
             filterData();
         }
 
@@ -120,6 +176,16 @@
                 return matchName && matchCat;
             });
             render(filtered);
+        }
+
+        // Cerrar menú si hace clic fuera
+        window.onclick = function(event) {
+            if (!event.target.matches('.menu-btn')) {
+                const dropdown = document.getElementById('menuDropdown');
+                if (dropdown && dropdown.style.display === 'flex') {
+                    dropdown.style.display = 'none';
+                }
+            }
         }
 
         loadData();
