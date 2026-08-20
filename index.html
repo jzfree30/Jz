@@ -15,7 +15,6 @@
         .filters button { padding: 8px 16px; border: none; background: #222; color: #bbb; border-radius: 20px; cursor: pointer; transition: 0.3s; }
         .filters button.active { background: #00ffcc; color: #000; font-weight: bold; }
 
-        /* Cuadrícula de 4 elementos */
         .grid-container {
             display: grid;
             grid-template-columns: repeat(2, 1fr);
@@ -29,14 +28,13 @@
 
         .card { background: #1a1a1a; padding: 10px; border-radius: 12px; border: 1px solid #333; cursor: pointer; transition: 0.3s; }
         .card:hover { border-color: #00ffcc; transform: translateY(-5px); }
-        .card img { width: 100%; height: 140px; object-fit: cover; border-radius: 8px; }
-        .card h3 { font-size: 14px; margin: 10px 0 0 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .card img { width: 100%; height: 140px; object-fit: cover; border-radius: 8px; background: #222; }
+        .card h3 { font-size: 14px; margin: 10px 0 0 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; text-align: center; }
 
-        /* Modal */
         .modal-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.9); z-index: 1000; justify-content: center; align-items: center; padding: 20px; }
-        .modal-content { background: #222; width: 100%; max-width: 400px; padding: 20px; border-radius: 15px; position: relative; border: 1px solid #444; }
-        .modal-close { position: absolute; top: 10px; right: 15px; cursor: pointer; font-size: 24px; color: #fff; }
-        .modal-content img { width: 100%; height: 200px; object-fit: cover; border-radius: 10px; }
+        .modal-content { background: #222; width: 100%; max-width: 450px; padding: 25px; border-radius: 15px; position: relative; border: 1px solid #444; }
+        .modal-close { position: absolute; top: 10px; right: 15px; cursor: pointer; font-size: 30px; color: #fff; }
+        .modal-content img { width: 100%; height: 250px; object-fit: cover; border-radius: 10px; }
         .btn-link { display: block; padding: 12px; margin-top: 10px; text-align: center; background: #007bff; color: #fff; text-decoration: none; border-radius: 8px; font-weight: bold; }
         .btn-drive { background: #0f9d58; }
     </style>
@@ -46,11 +44,12 @@
     <h1>RADDCRAFT</h1>
 
     <div class="controls">
-        <input type="text" id="searchInput" placeholder="Buscar..." oninput="filterData()">
+        <input type="text" id="searchInput" placeholder="Buscar por nombre..." oninput="filterData()">
         <div class="filters" id="filterButtons">
             <button class="active" onclick="setCategory('ALL', this)">Todos</button>
             <button onclick="setCategory('Addon', this)">Addons</button>
             <button onclick="setCategory('Mod', this)">Mods</button>
+            <button onclick="setCategory('Mundo', this)">Mundos</button>
         </div>
     </div>
 
@@ -60,8 +59,8 @@
         <div class="modal-content" onclick="event.stopPropagation()">
             <span class="modal-close" onclick="closeModal()">×</span>
             <img id="mImg" src="">
-            <h2 id="mTitle" style="color:#00ffcc"></h2>
-            <p id="mDesc" style="color:#ccc; font-size: 14px;"></p>
+            <h2 id="mTitle" style="color:#00ffcc; margin: 15px 0 5px 0;"></h2>
+            <p id="mDesc" style="color:#ccc; font-size: 14px; line-height: 1.4;"></p>
             <div id="mLinks"></div>
         </div>
     </div>
@@ -69,35 +68,36 @@
     <script>
         const JSON_URL = 'https://script.google.com/macros/s/AKfycbzLLDzXIwMwceUsD3yz1GXhYSxdGlhWk4eD_kTTxFf7YwvvAEOTr7a2OXOh1SEoVytS3Q/exec';
         let allData = [];
+        let currentCategory = 'ALL';
 
         async function loadData() {
             try {
                 const response = await fetch(JSON_URL);
                 allData = await response.json();
                 render(allData);
-            } catch (e) { document.getElementById('contentList').innerHTML = "Error al cargar..."; }
+            } catch (e) { document.getElementById('contentList').innerHTML = "<p style='text-align:center'>Error al cargar contenido.</p>"; }
         }
 
         function render(data) {
             const list = document.getElementById('contentList');
             list.innerHTML = data.map(item => `
                 <div class="card" onclick="openModal(${JSON.stringify(item).replace(/"/g, '&quot;')})">
-                    <img src="${item.imagen || ''}" onerror="this.src='https://via.placeholder.com/150'">
+                    <img src="${item.imagen || 'https://via.placeholder.com/150'}" onerror="this.src='https://via.placeholder.com/150'">
                     <h3>${item.nombre || 'Sin nombre'}</h3>
                 </div>
             `).join('');
         }
 
         function openModal(item) {
-            document.getElementById('mImg').src = item.imagen || '';
+            document.getElementById('mImg').src = item.imagen || 'https://via.placeholder.com/150';
             document.getElementById('mTitle').innerText = item.nombre || '';
             document.getElementById('mDesc').innerText = item.descripcion || 'Sin descripción.';
             
             let links = '';
             if (item.link) links += `<a href="${item.link}" target="_blank" class="btn-link">Descargar (Web)</a>`;
             if (item.drive) {
-                let id = item.drive.match(/id=([a-zA-Z0-9_-]+)/) ? item.drive.match(/id=([a-zA-Z0-9_-]+)/)[1] : item.drive.split('/d/')[1]?.split('/')[0];
-                links += `<a href="https://drive.google.com/uc?export=download&id=${id}" class="btn-link btn-drive">Descargar (Drive)</a>`;
+                let id = item.drive.match(/id=([a-zA-Z0-9_-]+)/) ? item.drive.match(/id=([a-zA-Z0-9_-]+)/)[1] : (item.drive.split('/d/')[1] ? item.drive.split('/d/')[1].split('/')[0] : '');
+                if (id) links += `<a href="https://drive.google.com/uc?export=download&id=${id}" class="btn-link btn-drive">Descargar (Drive)</a>`;
             }
             document.getElementById('mLinks').innerHTML = links;
             document.getElementById('itemModal').style.display = 'flex';
@@ -105,9 +105,21 @@
 
         function closeModal() { document.getElementById('itemModal').style.display = 'none'; }
         
+        function setCategory(cat, btn) {
+            currentCategory = cat;
+            document.querySelectorAll('.filters button').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            filterData();
+        }
+
         function filterData() {
             const val = document.getElementById('searchInput').value.toLowerCase();
-            render(allData.filter(i => (i.nombre || '').toLowerCase().includes(val)));
+            const filtered = allData.filter(i => {
+                const matchName = (i.nombre || '').toLowerCase().includes(val);
+                const matchCat = currentCategory === 'ALL' || (i.tipo || '').toLowerCase().includes(currentCategory.toLowerCase());
+                return matchName && matchCat;
+            });
+            render(filtered);
         }
 
         loadData();
