@@ -8,80 +8,56 @@
         * { box-sizing: border-box; }
         body { font-family: 'Segoe UI', Arial, sans-serif; background: #121212; color: #fff; margin: 0; padding: 15px; }
         
-        /* Encabezado y Menú Hamburguesa */
-        header { display: flex; justify-content: space-between; align-items: center; max-width: 1000px; margin: 0 auto 20px auto; position: relative; }
-        h1 { color: #00ffcc; margin: 0; font-size: 24px; text-transform: uppercase; letter-spacing: 2px; }
+        h1 { text-align: center; color: #00ffcc; margin-bottom: 15px; text-transform: uppercase; letter-spacing: 2px; font-size: 24px; }
         
-        .menu-btn { background: #222; border: 1px solid #444; color: #fff; font-size: 22px; padding: 6px 12px; border-radius: 8px; cursor: pointer; }
+        .controls { display: flex; flex-direction: column; gap: 10px; max-width: 900px; margin: 0 auto 15px auto; }
+        input[type="text"] { width: 100%; padding: 12px; border-radius: 8px; border: 1px solid #333; font-size: 15px; background: #1e1e1e; color: #fff; outline: none; }
         
-        /* Desplegable del menú de categorías */
-        .filters-dropdown {
-            display: none;
-            position: absolute;
-            right: 0;
-            top: 50px;
-            background: #1a1a1a;
-            border: 1px solid #333;
-            border-radius: 10px;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.5);
-            flex-direction: column;
-            gap: 5px;
-            padding: 10px;
-            z-index: 100;
-            min-width: 160px;
-        }
-        .filters-dropdown button {
-            background: transparent;
-            border: none;
-            color: #bbb;
-            padding: 10px;
-            text-align: left;
-            cursor: pointer;
-            border-radius: 6px;
-            font-size: 14px;
-        }
-        .filters-dropdown button:hover, .filters-dropdown button.active {
-            background: #00ffcc;
-            color: #000;
-            font-weight: bold;
-        }
+        /* Filtros visibles y ordenados horizontalmente con scroll si es necesario */
+        .filters { display: flex; gap: 8px; overflow-x: auto; padding-bottom: 5px; scrollbar-width: none; }
+        .filters::-webkit-scrollbar { display: none; }
+        .filters button { padding: 8px 14px; border: none; background: #1e1e1e; color: #bbb; border-radius: 20px; cursor: pointer; white-space: nowrap; font-size: 13px; border: 1px solid #333; }
+        .filters button.active { background: #00ffcc; color: #000; font-weight: bold; border-color: #00ffcc; }
 
-        /* Buscador */
-        .controls { max-width: 1000px; margin: 0 auto 20px auto; }
-        input[type="text"] { width: 100%; padding: 12px; border-radius: 8px; border: 1px solid #333; font-size: 16px; background: #1e1e1e; color: #fff; outline: none; }
-
-        /* Cuadrícula adaptativa PC y Android */
+        /* Cuadrícula estrictamente simétrica: 2 en celular, 4 en PC */
         .grid-container {
             display: grid;
             grid-template-columns: repeat(2, 1fr);
             gap: 12px;
-            max-width: 1000px;
+            max-width: 900px;
             margin: 0 auto;
         }
         @media (min-width: 768px) {
             .grid-container { grid-template-columns: repeat(4, 1fr); gap: 15px; }
         }
 
-        .card { background: #1a1a1a; padding: 10px; border-radius: 12px; border: 1px solid #333; cursor: pointer; transition: 0.3s; display: flex; flex-direction: column; }
+        .card { background: #1a1a1a; padding: 10px; border-radius: 12px; border: 1px solid #333; cursor: pointer; transition: 0.2s; display: flex; flex-direction: column; justify-content: space-between; }
         .card:hover { border-color: #00ffcc; transform: translateY(-3px); }
-        .card img { width: 100%; height: 130px; object-fit: cover; border-radius: 8px; background: #222; }
-        .card h3 { font-size: 13px; margin: 10px 0 0 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; text-align: center; }
+        .card img { width: 100%; height: 110px; object-fit: cover; border-radius: 8px; background: #222; }
+        .card h3 { font-size: 12px; margin: 8px 0 0 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; text-align: center; }
+
+        /* Paginación de 8 en 8 */
+        .pagination { display: flex; justify-content: center; gap: 15px; margin: 25px 0; align-items: center; }
+        .pagination button { padding: 8px 16px; background: #222; color: #fff; border: 1px solid #444; border-radius: 8px; cursor: pointer; font-size: 14px; }
+        .pagination button:disabled { opacity: 0.3; cursor: not-allowed; }
+        #pageInfo { font-size: 14px; color: #aaa; }
 
         /* Modal */
         .modal-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.9); z-index: 1000; justify-content: center; align-items: center; padding: 15px; }
         .modal-content { background: #222; width: 100%; max-width: 400px; padding: 20px; border-radius: 15px; position: relative; border: 1px solid #444; }
         .modal-close { position: absolute; top: 10px; right: 15px; cursor: pointer; font-size: 26px; color: #fff; }
-        .modal-content img { width: 100%; height: 200px; object-fit: cover; border-radius: 10px; }
+        .modal-content img { width: 100%; height: 180px; object-fit: cover; border-radius: 10px; }
         .btn-link { display: block; padding: 12px; margin-top: 10px; text-align: center; background: #007bff; color: #fff; text-decoration: none; border-radius: 8px; font-weight: bold; font-size: 14px; }
         .btn-drive { background: #0f9d58; }
     </style>
 </head>
 <body>
 
-    <header>
-        <h1>RADDCRAFT</h1>
-        <button class="menu-btn" onclick="toggleMenu()">☰</button>
-        <div class="filters-dropdown" id="menuDropdown">
+    <h1>RADDCRAFT</h1>
+
+    <div class="controls">
+        <input type="text" id="searchInput" placeholder="Buscar por nombre..." oninput="filterData()">
+        <div class="filters" id="filterButtons">
             <button class="active" onclick="setCategory('ALL', this)">Todos</button>
             <button onclick="setCategory('Addon', this)">Addons</button>
             <button onclick="setCategory('Mod', this)">Mods</button>
@@ -90,20 +66,22 @@
             <button onclick="setCategory('Skin', this)">Skins</button>
             <button onclick="setCategory('Mashup', this)">Mashup</button>
         </div>
-    </header>
-
-    <div class="controls">
-        <input type="text" id="searchInput" placeholder="Buscar por nombre..." oninput="filterData()">
     </div>
 
     <div id="contentList" class="grid-container"></div>
+
+    <div class="pagination">
+        <button id="prevBtn" onclick="changePage(-1)">⬅ Anterior</button>
+        <span id="pageInfo">Página 1</span>
+        <button id="nextBtn" onclick="changePage(1)">Siguiente ➡</button>
+    </div>
 
     <div id="itemModal" class="modal-overlay" onclick="closeModal()">
         <div class="modal-content" onclick="event.stopPropagation()">
             <span class="modal-close" onclick="closeModal()">×</span>
             <img id="mImg" src="">
-            <h2 id="mTitle" style="color:#00ffcc; margin: 12px 0 5px 0; font-size: 18px;"></h2>
-            <p id="mDesc" style="color:#ccc; font-size: 13px; line-height: 1.4; max-height: 100px; overflow-y: auto;"></p>
+            <h2 id="mTitle" style="color:#00ffcc; margin: 10px 0 5px 0; font-size: 17px;"></h2>
+            <p id="mDesc" style="color:#ccc; font-size: 13px; line-height: 1.4; max-height: 90px; overflow-y: auto;"></p>
             <div id="mLinks"></div>
         </div>
     </div>
@@ -111,23 +89,38 @@
     <script>
         const JSON_URL = 'https://script.google.com/macros/s/AKfycbzLLDzXIwMwceUsD3yz1GXhYSxdGlhWk4eD_kTTxFf7YwvvAEOTr7a2OXOh1SEoVytS3Q/exec';
         let allData = [];
+        let filteredData = [];
+        let currentPage = 1;
+        const itemsPerPage = 8; // Exactamente 8 por página
         let currentCategory = 'ALL';
 
         async function loadData() {
             try {
                 const response = await fetch(JSON_URL);
                 allData = await response.json();
-                render(allData);
-            } catch (e) { document.getElementById('contentList').innerHTML = "<p style='text-align:center; grid-column:1/-1;'>Error al cargar contenido.</p>"; }
+                filteredData = allData;
+                renderList();
+            } catch (e) { 
+                document.getElementById('contentList').innerHTML = "<p style='text-align:center; grid-column:1/-1;'>Error al cargar contenido.</p>"; 
+            }
         }
 
-        function render(data) {
+        function renderList() {
             const list = document.getElementById('contentList');
-            if (data.length === 0) {
+            
+            if (filteredData.length === 0) {
                 list.innerHTML = "<p style='text-align:center; grid-column:1/-1; color:#888;'>No se encontraron resultados.</p>";
+                document.getElementById('pageInfo').innerText = "Página 1 de 1";
+                document.getElementById('prevBtn').disabled = true;
+                document.getElementById('nextBtn').disabled = true;
                 return;
             }
-            list.innerHTML = data.map(item => {
+
+            const start = (currentPage - 1) * itemsPerPage;
+            const end = start + itemsPerPage;
+            const paginatedItems = filteredData.slice(start, end);
+
+            list.innerHTML = paginatedItems.map(item => {
                 const imgSrc = (item.imagen && item.imagen.startsWith('http')) ? item.imagen : 'https://via.placeholder.com/150';
                 return `
                     <div class="card" onclick="openModal(${JSON.stringify(item).replace(/"/g, '&quot;')})">
@@ -136,6 +129,42 @@
                     </div>
                 `;
             }).join('');
+
+            updatePaginationControls();
+        }
+
+        function updatePaginationControls() {
+            const maxPages = Math.ceil(filteredData.length / itemsPerPage) || 1;
+            document.getElementById('pageInfo').innerText = `Página ${currentPage} de ${maxPages}`;
+            document.getElementById('prevBtn').disabled = currentPage === 1;
+            document.getElementById('nextBtn').disabled = currentPage >= maxPages;
+        }
+
+        function changePage(direction) {
+            const maxPages = Math.ceil(filteredData.length / itemsPerPage);
+            if (currentPage + direction >= 1 && currentPage + direction <= maxPages) {
+                currentPage += direction;
+                renderList();
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            }
+        }
+
+        function filterData() {
+            const val = document.getElementById('searchInput').value.toLowerCase().trim();
+            filteredData = allData.filter(i => {
+                const matchName = (i.nombre || '').toLowerCase().includes(val);
+                const matchCat = currentCategory === 'ALL' || (i.tipo || '').toLowerCase().includes(currentCategory.toLowerCase());
+                return matchName && matchCat;
+            });
+            currentPage = 1; // Regresar a la primera página al buscar o filtrar
+            renderList();
+        }
+
+        function setCategory(cat, btn) {
+            currentCategory = cat;
+            document.querySelectorAll('.filters button').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            filterData();
         }
 
         function openModal(item) {
@@ -154,39 +183,6 @@
         }
 
         function closeModal() { document.getElementById('itemModal').style.display = 'none'; }
-        
-        function toggleMenu() {
-            const dropdown = document.getElementById('menuDropdown');
-            dropdown.style.display = dropdown.style.display === 'flex' ? 'none' : 'flex';
-        }
-
-        function setCategory(cat, btn) {
-            currentCategory = cat;
-            document.querySelectorAll('.filters-dropdown button').forEach(b => b.classList.remove('active'));
-            btn.classList.add('active');
-            toggleMenu(); // Cierra el menú al elegir
-            filterData();
-        }
-
-        function filterData() {
-            const val = document.getElementById('searchInput').value.toLowerCase();
-            const filtered = allData.filter(i => {
-                const matchName = (i.nombre || '').toLowerCase().includes(val);
-                const matchCat = currentCategory === 'ALL' || (i.tipo || '').toLowerCase().includes(currentCategory.toLowerCase());
-                return matchName && matchCat;
-            });
-            render(filtered);
-        }
-
-        // Cerrar menú si hace clic fuera
-        window.onclick = function(event) {
-            if (!event.target.matches('.menu-btn')) {
-                const dropdown = document.getElementById('menuDropdown');
-                if (dropdown && dropdown.style.display === 'flex') {
-                    dropdown.style.display = 'none';
-                }
-            }
-        }
 
         loadData();
     </script>
