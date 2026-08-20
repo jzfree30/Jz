@@ -5,101 +5,40 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>RADDCRAFT</title>
     <style>
-        body { font-family: Arial, sans-serif; background: #121212; color: #fff; margin: 0; padding: 15px; }
-        h1 { text-align: center; color: #00ffcc; margin-bottom: 15px; }
+        body { font-family: 'Segoe UI', Arial, sans-serif; background: #121212; color: #fff; margin: 0; padding: 15px; }
+        h1 { text-align: center; color: #00ffcc; margin-bottom: 20px; text-transform: uppercase; letter-spacing: 2px; }
+        
         .controls { display: flex; flex-direction: column; gap: 10px; max-width: 800px; margin: 0 auto 20px auto; }
-        input[type="text"] { padding: 12px; border-radius: 6px; border: none; font-size: 16px; background: #222; color: #fff; outline: none; }
-        .filters { display: flex; gap: 5px; flex-wrap: wrap; justify-content: center; }
-        .filters button { padding: 8px 12px; border: none; background: #2a2a2a; color: #bbb; border-radius: 4px; cursor: pointer; font-size: 14px; }
+        input[type="text"] { padding: 12px; border-radius: 8px; border: none; font-size: 16px; background: #1e1e1e; color: #fff; border: 1px solid #333; }
+        
+        .filters { display: flex; gap: 8px; flex-wrap: wrap; justify-content: center; }
+        .filters button { padding: 8px 16px; border: none; background: #222; color: #bbb; border-radius: 20px; cursor: pointer; transition: 0.3s; }
         .filters button.active { background: #00ffcc; color: #000; font-weight: bold; }
 
+        /* Cuadrícula de 4 elementos */
         .grid-container {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+            grid-template-columns: repeat(2, 1fr);
             gap: 15px;
-            max-width: 1200px;
+            max-width: 1000px;
             margin: 0 auto;
         }
-
-        @media (min-width: 1024px) {
-            .grid-container {
-                grid-template-columns: repeat(5, 1fr);
-            }
+        @media (min-width: 768px) {
+            .grid-container { grid-template-columns: repeat(4, 1fr); }
         }
 
-        .card { background: #1e1e1e; padding: 10px; border-radius: 8px; display: flex; flex-direction: column; justify-content: space-between; border: 1px solid #2a2a2a; cursor: pointer; transition: transform 0.2s; }
-        .card:hover { transform: scale(1.02); border-color: #00ffcc; }
-        .card img { width: 100%; height: 130px; object-fit: cover; border-radius: 6px; background: #333; }
-        .card-info { margin-top: 8px; flex-grow: 1; }
-        .card-info h3 { margin: 0 0 4px 0; color: #ff0055; font-size: 15px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-        .card-info p { color: #888; font-size: 12px; margin: 0; }
+        .card { background: #1a1a1a; padding: 10px; border-radius: 12px; border: 1px solid #333; cursor: pointer; transition: 0.3s; }
+        .card:hover { border-color: #00ffcc; transform: translateY(-5px); }
+        .card img { width: 100%; height: 140px; object-fit: cover; border-radius: 8px; }
+        .card h3 { font-size: 14px; margin: 10px 0 0 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 
-        /* Estilos de la Ventana Emergente (Modal) */
-        .modal-overlay {
-            display: none;
-            position: fixed;
-            top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0, 0, 0, 0.85);
-            justify-content: center;
-            align-items: center;
-            z-index: 1000;
-            padding: 15px;
-            box-sizing: border-box;
-        }
-        .modal-content {
-            background: #1a1a1a;
-            width: 100%;
-            max-width: 450px;
-            border-radius: 10px;
-            padding: 20px;
-            position: relative;
-            border: 1px solid #333;
-            max-height: 90vh;
-            overflow-y: auto;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.5);
-        }
-        .modal-close {
-            position: absolute;
-            top: 10px; right: 15px;
-            background: #333;
-            color: #fff;
-            border: none;
-            border-radius: 50%;
-            width: 30px; height: 30px;
-            font-size: 16px;
-            cursor: pointer;
-            font-weight: bold;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-        .modal-close:hover { background: #ff4444; }
-        .modal-content img {
-            width: 100%;
-            height: 200px;
-            object-fit: cover;
-            border-radius: 6px;
-            background: #222;
-        }
-        .modal-content h2 { color: #ff0055; margin: 15px 0 5px 0; font-size: 20px; }
-        .modal-content h4 { color: #00ffcc; margin: 0 0 10px 0; font-size: 14px; }
-        .modal-content p { color: #ccc; font-size: 14px; line-height: 1.4; margin-bottom: 15px; }
-
-        .links-container { display: flex; flex-direction: column; gap: 8px; margin-top: 15px; }
-        .links-container a { background: #007bff; color: #fff; padding: 10px; text-decoration: none; border-radius: 6px; font-size: 13px; font-weight: bold; text-align: center; }
-        .link-nodisp { background: #444 !important; color: #888 !important; pointer-events: none; }
-
-        .link-mundo { background: #28a745 !important; }
-        .link-addon { background: #ff8800 !important; }
-        .link-mod { background: #dc3545 !important; }
-        .link-textura { background: #17a2b8 !important; }
-        .link-skin { background: #6f42c1 !important; }
-        .link-drive { background: #0f9d58 !important; }
-
-        .pagination { display: flex; justify-content: center; gap: 15px; margin-top: 30px; align-items: center; }
-        .pagination button { padding: 10px 20px; background: #333; color: #fff; border: none; border-radius: 6px; cursor: pointer; font-size: 16px; font-weight: bold; }
-        .pagination button:disabled { opacity: 0.3; cursor: not-allowed; }
-        #pageInfo { font-size: 14px; color: #aaa; }
+        /* Modal */
+        .modal-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.9); z-index: 1000; justify-content: center; align-items: center; padding: 20px; }
+        .modal-content { background: #222; width: 100%; max-width: 400px; padding: 20px; border-radius: 15px; position: relative; border: 1px solid #444; }
+        .modal-close { position: absolute; top: 10px; right: 15px; cursor: pointer; font-size: 24px; color: #fff; }
+        .modal-content img { width: 100%; height: 200px; object-fit: cover; border-radius: 10px; }
+        .btn-link { display: block; padding: 12px; margin-top: 10px; text-align: center; background: #007bff; color: #fff; text-decoration: none; border-radius: 8px; font-weight: bold; }
+        .btn-drive { background: #0f9d58; }
     </style>
 </head>
 <body>
@@ -107,191 +46,68 @@
     <h1>RADDCRAFT</h1>
 
     <div class="controls">
-        <input type="text" id="searchInput" placeholder="Buscar por nombre..." oninput="filterData()">
+        <input type="text" id="searchInput" placeholder="Buscar..." oninput="filterData()">
         <div class="filters" id="filterButtons">
             <button class="active" onclick="setCategory('ALL', this)">Todos</button>
             <button onclick="setCategory('Addon', this)">Addons</button>
             <button onclick="setCategory('Mod', this)">Mods</button>
-            <button onclick="setCategory('Mundo', this)">Mundos</button>
-            <button onclick="setCategory('Textura', this)">Texturas</button>
-            <button onclick="setCategory('Skin', this)">Skins</button>
-            <button onclick="setCategory('Mashup', this)">Mashup</button>
         </div>
     </div>
 
     <div id="contentList" class="grid-container"></div>
 
-    <!-- Ventana Emergente (Modal) -->
-    <div id="itemModal" class="modal-overlay" onclick="closeModalOnOutside(event)">
-        <div class="modal-content">
-            <button class="modal-close" onclick="closeModal()">✕</button>
-            <img id="modalImg" src="" alt="">
-            <h2 id="modalTitle"></h2>
-            <h4 id="modalCreator"></h4>
-            <p id="modalDesc"></p>
-            <div class="links-container" id="modalLinks"></div>
+    <div id="itemModal" class="modal-overlay" onclick="closeModal()">
+        <div class="modal-content" onclick="event.stopPropagation()">
+            <span class="modal-close" onclick="closeModal()">×</span>
+            <img id="mImg" src="">
+            <h2 id="mTitle" style="color:#00ffcc"></h2>
+            <p id="mDesc" style="color:#ccc; font-size: 14px;"></p>
+            <div id="mLinks"></div>
         </div>
-    </div>
-
-    <div class="pagination">
-        <button id="prevBtn" onclick="changePage(-1)">⬅ Anterior</button>
-        <span id="pageInfo">Página 1</span>
-        <button id="nextBtn" onclick="changePage(1)">Siguiente ➡</button>
     </div>
 
     <script>
         const JSON_URL = 'https://script.google.com/macros/s/AKfycbzLLDzXIwMwceUsD3yz1GXhYSxdGlhWk4eD_kTTxFf7YwvvAEOTr7a2OXOh1SEoVytS3Q/exec';
-        
         let allData = [];
-        let filteredData = [];
-        let currentPage = 1;
-        const itemsPerPage = 10;
-        let currentCategory = 'ALL';
 
         async function loadData() {
             try {
                 const response = await fetch(JSON_URL);
-                const rawData = await response.json();
-                
-                allData = rawData.map(item => {
-                    let newItem = {};
-                    for (let key in item) {
-                        let cleanKey = key.toString().trim().toLowerCase();
-                        if (cleanKey === 'nombre' || cleanKey === 'name') newItem.nombre = item[key];
-                        else if (cleanKey === 'creador' || cleanKey === 'autor') newItem.creador = item[key];
-                        else if (cleanKey === 'link' || cleanKey === 'enlace') newItem.link = item[key];
-                        else if (cleanKey === 'drive') newItem.drive = item[key];
-                        else if (cleanKey === 'tipo' || cleanKey === 'category') newItem.tipo = item[key];
-                        else if (cleanKey === 'imagen' || cleanKey === 'img' || cleanKey === 'image') newItem.imagen = item[key];
-                        else if (cleanKey === 'descripción' || cleanKey === 'descripcion') newItem.descripcion = item[key];
-                        else newItem[cleanKey] = item[key];
-                    }
-                    return newItem;
-                });
-
-                filteredData = allData;
-                renderList();
-            } catch (error) {
-                console.error("Error al cargar los datos:", error);
-                document.getElementById('contentList').innerHTML = '<p style="text-align:center; color:#ff4444; grid-column: 1 / -1;">Error al cargar los datos.</p>';
-            }
+                allData = await response.json();
+                render(allData);
+            } catch (e) { document.getElementById('contentList').innerHTML = "Error al cargar..."; }
         }
 
-        function filterData() {
-            const query = document.getElementById('searchInput').value.toLowerCase().trim();
-            filteredData = allData.filter(item => {
-                const name = item.nombre ? item.nombre.toString().toLowerCase() : '';
-                const matchesName = name.includes(query);
-                
-                const itemType = item.tipo ? item.tipo.toString().trim().toLowerCase() : '';
-                const matchesCategory = currentCategory === 'ALL' || itemType.includes(currentCategory.toLowerCase());
-                
-                return matchesName && matchesCategory;
-            });
-            currentPage = 1;
-            renderList();
-        }
-
-        function setCategory(cat, btn) {
-            currentCategory = cat;
-            document.querySelectorAll('.filters button').forEach(b => b.classList.remove('active'));
-            btn.classList.add('active');
-            filterData();
-        }
-
-        function getStyleAndLabel(typeStr) {
-            let t = typeStr ? typeStr.toLowerCase().trim() : '';
-            if (t.includes('mundo')) return { label: 'Descargar Mundo', css: 'link-mundo' };
-            if (t.includes('addon')) return { label: 'Descargar Addon', css: 'link-addon' };
-            if (t.includes('mod')) return { label: 'Visitar Mod', css: 'link-mod' };
-            if (t.includes('textura')) return { label: 'Descargar Textura', css: 'link-textura' };
-            if (t.includes('skin')) return { label: 'Descargar Skin', css: 'link-skin' };
-            return { label: `Descargar ${typeStr || 'Archivo'}`, css: '' };
-        }
-
-        function renderList() {
-            const listDiv = document.getElementById('contentList');
-            listDiv.innerHTML = '';
-            const start = (currentPage - 1) * itemsPerPage;
-            const end = start + itemsPerPage;
-            const paginatedItems = filteredData.slice(start, end);
-
-            paginatedItems.forEach(item => {
-                const card = document.createElement('div');
-                card.className = 'card';
-                card.innerHTML = `
-                    <img src="${item.imagen || ''}" alt="${item.nombre || ''}" onerror="this.src='https://via.placeholder.com/150?text=Sin+Img'">
-                    <div class="card-info">
-                        <h3>${item.nombre || 'Sin nombre'}</h3>
-                        <p>${item.creador ? 'Por: ' + item.creador : ''}</p>
-                    </div>
-                `;
-                // Al hacer clic en la tarjeta se abre la ventana emergente
-                card.onclick = () => openModal(item);
-                listDiv.appendChild(card);
-            });
-            updatePaginationControls();
+        function render(data) {
+            const list = document.getElementById('contentList');
+            list.innerHTML = data.map(item => `
+                <div class="card" onclick="openModal(${JSON.stringify(item).replace(/"/g, '&quot;')})">
+                    <img src="${item.imagen || ''}" onerror="this.src='https://via.placeholder.com/150'">
+                    <h3>${item.nombre || 'Sin nombre'}</h3>
+                </div>
+            `).join('');
         }
 
         function openModal(item) {
-            document.getElementById('modalImg').src = item.imagen || '';
-            document.getElementById('modalTitle').innerText = item.nombre || 'Sin nombre';
-            document.getElementById('modalCreator').innerText = item.creador ? 'Creador: ' + item.creador : '';
-            document.getElementById('modalDesc').innerText = item.descripcion || 'Sin descripción disponible.';
-
-            let linksHtml = '';
-            const tipoOriginal = item.tipo ? item.tipo.toString().trim() : '';
-            let hasLink = item.link && item.link.toString().trim() !== '';
-            let hasDrive = item.drive && item.drive.toString().trim() !== '';
-
-            if (!hasLink && !hasDrive) {
-                linksHtml = `<a href="#" class="link-nodisp">No disponible</a>`;
-            } else {
-                if (hasLink) {
-                    const links = item.link.toString().split(',').map(l => l.trim()).filter(l => l !== '');
-                    links.forEach((cleanLink) => {
-                        let config = getStyleAndLabel(tipoOriginal);
-                        linksHtml += `<a href="${cleanLink}" target="_blank" class="${config.css}">${config.label}</a>`;
-                    });
-                }
-
-                if (hasDrive) {
-                    let driveUrl = item.drive.toString().trim();
-                    let match = driveUrl.match(/\/d\/([a-zA-Z0-9_-]+)/) || driveUrl.match(/id=([a-zA-Z0-9_-]+)/);
-                    let finalDriveUrl = match && match[1] ? `https://drive.google.com/uc?export=download&id=${match[1]}` : driveUrl;
-                    
-                    linksHtml += `<a href="${finalDriveUrl}" download class="link-drive">Descargar Archivo (Drive)</a>`;
-                }
+            document.getElementById('mImg').src = item.imagen || '';
+            document.getElementById('mTitle').innerText = item.nombre || '';
+            document.getElementById('mDesc').innerText = item.descripcion || 'Sin descripción.';
+            
+            let links = '';
+            if (item.link) links += `<a href="${item.link}" target="_blank" class="btn-link">Descargar (Web)</a>`;
+            if (item.drive) {
+                let id = item.drive.match(/id=([a-zA-Z0-9_-]+)/) ? item.drive.match(/id=([a-zA-Z0-9_-]+)/)[1] : item.drive.split('/d/')[1]?.split('/')[0];
+                links += `<a href="https://drive.google.com/uc?export=download&id=${id}" class="btn-link btn-drive">Descargar (Drive)</a>`;
             }
-
-            document.getElementById('modalLinks').innerHTML = linksHtml;
+            document.getElementById('mLinks').innerHTML = links;
             document.getElementById('itemModal').style.display = 'flex';
         }
 
-        function closeModal() {
-            document.getElementById('itemModal').style.display = 'none';
-        }
-
-        function closeModalOnOutside(event) {
-            if (event.target.id === 'itemModal') {
-                closeModal();
-            }
-        }
-
-        function updatePaginationControls() {
-            const maxPages = Math.ceil(filteredData.length / itemsPerPage) || 1;
-            document.getElementById('pageInfo').innerText = `Página ${currentPage} de ${maxPages}`;
-            document.getElementById('prevBtn').disabled = currentPage === 1;
-            document.getElementById('nextBtn').disabled = currentPage >= maxPages;
-        }
-
-        function changePage(direction) {
-            const maxPages = Math.ceil(filteredData.length / itemsPerPage);
-            if (currentPage + direction >= 1 && currentPage + direction <= maxPages) {
-                currentPage += direction;
-                renderList();
-                window.scrollTo({ top: 0, behavior: 'smooth' });
-            }
+        function closeModal() { document.getElementById('itemModal').style.display = 'none'; }
+        
+        function filterData() {
+            const val = document.getElementById('searchInput').value.toLowerCase();
+            render(allData.filter(i => (i.nombre || '').toLowerCase().includes(val)));
         }
 
         loadData();
