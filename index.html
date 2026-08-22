@@ -6,29 +6,40 @@
     <title>RADDCRAFT</title>
     <style>
         * { box-sizing: border-box; }
-        body { font-family: 'Segoe UI', Arial, sans-serif; background: #121212; color: #fff; margin: 0; padding: 15px; }
+        body { 
+            font-family: 'Segoe UI', Arial, sans-serif; 
+            background: linear-gradient(rgba(18, 18, 18, 0.45), rgba(18, 18, 18, 0.45)), url('https://i.ibb.co/fdFMMQ9N/images.jpg');
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+            color: #fff; 
+            margin: 0; 
+            padding: 15px; 
+            min-height: 100vh;
+        }
         
-        /* Cabecera con título y Menú Hamburguesa a la derecha */
         header { display: flex; justify-content: space-between; align-items: center; max-width: 900px; margin: 0 auto 15px auto; position: relative; }
-        h1 { color: #00ffcc; margin: 0; font-size: 22px; text-transform: uppercase; letter-spacing: 2px; }
+        .logo-container { display: flex; align-items: center; gap: 10px; }
+        .logo-container img { height: 35px; object-fit: contain; }
+        h1 { color: #00ffcc; margin: 0; font-size: 20px; text-transform: uppercase; letter-spacing: 2px; }
         
-        .menu-btn { background: #1e1e1e; border: 1px solid #444; color: #fff; font-size: 20px; padding: 6px 12px; border-radius: 8px; cursor: pointer; }
+        .menu-btn { background: rgba(30, 30, 30, 0.9); border: 1px solid #444; color: #fff; font-size: 20px; padding: 6px 12px; border-radius: 8px; cursor: pointer; }
         
-        /* Desplegable de las 3 rayas */
         .filters-dropdown {
             display: none;
             position: absolute;
             right: 0;
             top: 45px;
-            background: #1a1a1a;
+            background: rgba(20, 20, 20, 0.95);
+            backdrop-filter: blur(8px);
             border: 1px solid #333;
             border-radius: 10px;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.7);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.8);
             flex-direction: column;
             gap: 4px;
             padding: 8px;
             z-index: 100;
-            min-width: 150px;
+            min-width: 180px;
         }
         .filters-dropdown button {
             background: transparent;
@@ -39,6 +50,16 @@
             cursor: pointer;
             border-radius: 6px;
             font-size: 14px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .filters-dropdown button span {
+            background: rgba(42, 42, 42, 0.8);
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-size: 12px;
+            color: #00ffcc;
         }
         .filters-dropdown button:hover, .filters-dropdown button.active {
             background: #00ffcc;
@@ -47,53 +68,141 @@
         }
 
         .controls { max-width: 900px; margin: 0 auto 15px auto; }
-        input[type="text"] { width: 100%; padding: 12px; border-radius: 8px; border: 1px solid #333; font-size: 15px; background: #1e1e1e; color: #fff; outline: none; }
+        input[type="text"] { width: 100%; padding: 12px; border-radius: 8px; border: 1px solid #333; font-size: 15px; background: rgba(20, 20, 20, 0.85); color: #fff; outline: none; }
 
-        /* Cuadrícula estrictamente simétrica: 2 en celular, 4 en PC */
+        .carousel-title { font-size: 15px; color: #00ffcc; margin: 15px auto 10px auto; max-width: 900px; text-transform: uppercase; letter-spacing: 1px; }
+        .carousel-container {
+            display: flex;
+            gap: 12px;
+            overflow-x: auto;
+            max-width: 900px;
+            margin: 0 auto 20px auto;
+            padding-bottom: 5px;
+            scrollbar-width: thin;
+            scrollbar-color: #00ffcc #222;
+        }
+        .carousel-card {
+            min-width: 240px;
+            max-width: 240px;
+            height: 180px;
+            background: rgba(20, 20, 20, 0.9);
+            backdrop-filter: blur(4px);
+            border-radius: 12px;
+            border: 1px solid #333;
+            overflow: hidden;
+            cursor: pointer;
+            flex-shrink: 0;
+            position: relative;
+            display: flex;
+            flex-direction: column;
+        }
+        .carousel-card img { width: 100%; height: 130px; object-fit: cover; }
+        .carousel-card .info { padding: 8px; text-align: center; }
+        .carousel-card h3 { font-size: 13px; margin: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+
+        .category-hero {
+            max-width: 900px;
+            margin: 0 auto 20px auto;
+            background: rgba(20, 20, 20, 0.9);
+            backdrop-filter: blur(4px);
+            border: 1px solid #00ffcc;
+            border-radius: 12px;
+            overflow: hidden;
+            cursor: pointer;
+            position: relative;
+            display: flex;
+            flex-direction: column;
+        }
+        .category-hero img { width: 100%; height: 200px; object-fit: cover; }
+        .category-hero .info { padding: 12px; }
+
+        .section-title { font-size: 15px; color: #00ffcc; margin: 20px auto 10px auto; max-width: 900px; text-transform: uppercase; letter-spacing: 1px; }
         .grid-container {
             display: grid;
             grid-template-columns: repeat(2, 1fr);
             gap: 12px;
             max-width: 900px;
             margin: 0 auto;
+            align-items: stretch;
         }
         @media (min-width: 768px) {
-            .grid-container { grid-template-columns: repeat(4, 1fr); gap: 15px; }
+            .grid-container { grid-template-columns: repeat(3, 1fr); gap: 15px; }
         }
 
-        .card { background: #1a1a1a; padding: 10px; border-radius: 12px; border: 1px solid #333; cursor: pointer; transition: 0.2s; display: flex; flex-direction: column; justify-content: space-between; }
+        .card { 
+            background: rgba(20, 20, 20, 0.9); 
+            backdrop-filter: blur(4px); 
+            padding: 10px; 
+            border-radius: 12px; 
+            border: 1px solid #333; 
+            cursor: pointer; 
+            transition: 0.2s; 
+            display: flex; 
+            flex-direction: column; 
+            justify-content: space-between;
+            height: 180px;
+            position: relative;
+            overflow: hidden;
+        }
         .card:hover { border-color: #00ffcc; transform: translateY(-3px); }
-        .card img { width: 100%; height: 110px; object-fit: cover; border-radius: 8px; background: #222; }
+        .card img { 
+            width: 100%; 
+            height: 120px; 
+            object-fit: cover; 
+            border-radius: 8px; 
+            background: #222; 
+        }
         .card h3 { font-size: 12px; margin: 8px 0 0 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; text-align: center; }
 
-        /* Paginación de 8 en 8 */
-        .pagination { display: flex; justify-content: center; gap: 15px; margin: 25px 0; align-items: center; }
-        .pagination button { padding: 8px 16px; background: #222; color: #fff; border: 1px solid #444; border-radius: 8px; cursor: pointer; font-size: 14px; }
+        /* Badge de NEW */
+        .badge-new {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            background: #00ffcc;
+            color: #000;
+            font-size: 10px;
+            font-weight: 900;
+            padding: 3px 7px;
+            border-radius: 6px;
+            box-shadow: 0 0 10px rgba(0, 255, 204, 0.8);
+            z-index: 10;
+            letter-spacing: 0.5px;
+        }
+
+        .pagination { display: flex; justify-content: center; gap: 15px; margin: 25px 0; align-items: center; max-width: 900px; margin-left: auto; margin-right: auto; }
+        .pagination button { padding: 8px 16px; background: rgba(34, 34, 34, 0.9); color: #fff; border: 1px solid #444; border-radius: 8px; cursor: pointer; font-size: 14px; }
         .pagination button:disabled { opacity: 0.3; cursor: not-allowed; }
         #pageInfo { font-size: 14px; color: #aaa; }
 
-        /* Modal */
-        .modal-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.9); z-index: 1000; justify-content: center; align-items: center; padding: 15px; }
-        .modal-content { background: #222; width: 100%; max-width: 400px; padding: 20px; border-radius: 15px; position: relative; border: 1px solid #444; }
-        .modal-close { position: absolute; top: 10px; right: 15px; cursor: pointer; font-size: 26px; color: #fff; }
+        .modal-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85); z-index: 1000; justify-content: center; align-items: center; padding: 15px; }
+        .modal-content { background: #222; width: 100%; max-width: 420px; padding: 20px; border-radius: 15px; position: relative; border: 1px solid #00ffcc; box-shadow: 0 0 20px rgba(0,255,204,0.2); }
+        .modal-close { position: absolute; top: 12px; right: 15px; cursor: pointer; font-size: 22px; color: #fff; font-weight: bold; }
         .modal-content img { width: 100%; height: 180px; object-fit: cover; border-radius: 10px; }
-        .btn-link { display: block; padding: 12px; margin-top: 10px; text-align: center; background: #007bff; color: #fff; text-decoration: none; border-radius: 8px; font-weight: bold; font-size: 14px; }
+
+        .btn-link { display: block; padding: 10px 12px; margin-top: 8px; text-align: center; background: #007bff; color: #fff; text-decoration: none; border-radius: 8px; font-weight: bold; font-size: 13px; }
         .btn-drive { background: #0f9d58; }
+        .btn-curse { background: #f16436; }
+        .btn-apk { background: #28a745; }
     </style>
 </head>
 <body>
 
     <header>
-        <h1>RADDCRAFT</h1>
+        <div class="logo-container">
+            <img src="https://i.ibb.co/TU_LOGO.jpg" alt="Logo" referrerpolicy="no-referrer" onerror="this.style.display='none'">
+            <h1>RADDCRAFT</h1>
+        </div>
         <button class="menu-btn" onclick="toggleMenu()">☰</button>
         <div class="filters-dropdown" id="menuDropdown">
-            <button class="active" onclick="setCategory('ALL', this)">Todos</button>
-            <button onclick="setCategory('Addon', this)">Addons</button>
-            <button onclick="setCategory('Mod', this)">Mods</button>
-            <button onclick="setCategory('Mundo', this)">Mundos</button>
-            <button onclick="setCategory('Textura', this)">Texturas</button>
-            <button onclick="setCategory('Skin', this)">Skins</button>
-            <button onclick="setCategory('Mashup', this)">Mashup</button>
+            <button class="active" onclick="setCategory('ALL', this)">Todos <span id="count-all">0</span></button>
+            <button onclick="setCategory('Addon', this)">Addons <span id="count-addon">0</span></button>
+            <button onclick="setCategory('Mod', this)">Mods <span id="count-mod">0</span></button>
+            <button onclick="setCategory('Mundo', this)">Mundos <span id="count-mundo">0</span></button>
+            <button onclick="setCategory('Textura', this)">Texturas <span id="count-textura">0</span></button>
+            <button onclick="setCategory('Skin', this)">Skins <span id="count-skin">0</span></button>
+            <button onclick="setCategory('Mashup', this)">Mashups <span id="count-mashup">0</span></button>
+            <button onclick="setCategory('APK', this)">APK <span id="count-apk">0</span></button>
         </div>
     </header>
 
@@ -101,6 +210,14 @@
         <input type="text" id="searchInput" placeholder="Buscar por nombre..." oninput="filterData()">
     </div>
 
+    <div id="carouselSection" style="display:none;">
+        <div class="carousel-title">⭐ Populares / Destacados</div>
+        <div id="carouselContainer" class="carousel-container"></div>
+    </div>
+
+    <div id="categoryHeroContainer"></div>
+
+    <div class="section-title" id="sectionTitleLabel">Contenido Reciente</div>
     <div id="contentList" class="grid-container"></div>
 
     <div class="pagination">
@@ -112,35 +229,125 @@
     <div id="itemModal" class="modal-overlay" onclick="closeModal()">
         <div class="modal-content" onclick="event.stopPropagation()">
             <span class="modal-close" onclick="closeModal()">×</span>
-            <img id="mImg" src="">
-            <h2 id="mTitle" style="color:#00ffcc; margin: 10px 0 5px 0; font-size: 17px;"></h2>
-            <p id="mDesc" style="color:#ccc; font-size: 13px; line-height: 1.4; max-height: 90px; overflow-y: auto;"></p>
+            <img id="mImg" src="" referrerpolicy="no-referrer">
+            <h2 id="mTitle" style="color:#00ffcc; margin: 10px 0 3px 0; font-size: 17px;"></h2>
+            <div id="mType" style="font-size: 11px; color: #00ffcc; font-weight: bold; margin-bottom: 8px; text-transform: uppercase;"></div>
+            <p id="mDesc" style="color:#ccc; font-size: 13px; line-height: 1.4; max-height: 90px; overflow-y: auto; margin-bottom: 12px;"></p>
             <div id="mLinks"></div>
         </div>
     </div>
-
     <script>
         const JSON_URL = 'https://script.google.com/macros/s/AKfycbzLLDzXIwMwceUsD3yz1GXhYSxdGlhWk4eD_kTTxFf7YwvvAEOTr7a2OXOh1SEoVytS3Q/exec';
         let allData = [];
         let filteredData = [];
         let currentPage = 1;
-        const itemsPerPage = 8; // Estrictamente 8 por página
+        const itemsPerPage = 6;
         let currentCategory = 'ALL';
+        
+        // Define cuántas publicaciones (las más recientes) llevarán la etiqueta NEW
+        const TOTAL_NEW_ITEMS = 6; 
+
+        function fixImgUrl(url) {
+            if (!url || !url.trim() || !url.startsWith('http')) {
+                return 'https://via.placeholder.com/300x180?text=No+Image';
+            }
+            let cleanUrl = url.trim();
+            if (cleanUrl.includes('ibb.co') && !cleanUrl.includes('i.ibb.co')) {
+                cleanUrl = cleanUrl.replace('ibb.co/', 'i.ibb.co/') + '.jpg';
+            }
+            return cleanUrl;
+        }
+
+        function handleImgError(img) {
+            if (!img.dataset.retried) {
+                img.dataset.retried = 'true';
+                if (img.src.includes('i.ibb.co') && !img.src.endsWith('.jpg')) {
+                    img.src = img.src + '.jpg';
+                    return;
+                }
+            }
+            img.src = 'https://via.placeholder.com/300x180?text=Error+Imagen';
+        }
 
         async function loadData() {
             try {
                 const response = await fetch(JSON_URL);
-                allData = await response.json();
+                const data = await response.json();
+                // Al revertir la lista, lo último de tu tabla pasa a ser el índice 0 (lo más nuevo arriba)
+                allData = data.reverse();
                 filteredData = allData;
-                renderList();
+                updateCategoryCounts();
+                renderPage();
             } catch (e) { 
                 document.getElementById('contentList').innerHTML = "<p style='text-align:center; grid-column:1/-1;'>Error al cargar contenido.</p>"; 
             }
         }
 
-        function renderList() {
+        function updateCategoryCounts() {
+            document.getElementById('count-all').innerText = allData.length;
+            document.getElementById('count-addon').innerText = allData.filter(i => (i.tipo || '').toLowerCase().includes('addon')).length;
+            document.getElementById('count-mod').innerText = allData.filter(i => (i.tipo || '').toLowerCase().includes('mod')).length;
+            document.getElementById('count-mundo').innerText = allData.filter(i => (i.tipo || '').toLowerCase().includes('mundo')).length;
+            document.getElementById('count-textura').innerText = allData.filter(i => (i.tipo || '').toLowerCase().includes('textura')).length;
+            document.getElementById('count-skin').innerText = allData.filter(i => (i.tipo || '').toLowerCase().includes('skin')).length;
+            document.getElementById('count-mashup').innerText = allData.filter(i => (i.tipo || '').toLowerCase().includes('mashup')).length;
+            document.getElementById('count-apk').innerText = allData.filter(i => (i.tipo || '').toLowerCase().includes('apk')).length;
+        }
+
+        function renderPage() {
+            const carouselSection = document.getElementById('carouselSection');
+            const categoryHeroContainer = document.getElementById('categoryHeroContainer');
+            const searchVal = document.getElementById('searchInput').value.trim();
+
+            if (currentPage === 1 && currentCategory === 'ALL' && !searchVal) {
+                carouselSection.style.display = 'block';
+                const featuredItems = allData.filter(i => ['1', '2', '3', '4'].includes(String(i.puesto || '').trim()));
+                const carouselContainer = document.getElementById('carouselContainer');
+                
+                if (featuredItems.length > 0) {
+                    carouselContainer.innerHTML = featuredItems.map((item) => {
+                        const originalIndex = allData.indexOf(item);
+                        const isRecent = originalIndex < TOTAL_NEW_ITEMS;
+                        return `
+                            <div class="carousel-card" onclick='openModalByIndex(${originalIndex})'>
+                                ${isRecent ? '<span class="badge-new">NEW</span>' : ''}
+                                <img src="${fixImgUrl(item.imagen)}" referrerpolicy="no-referrer" loading="lazy" onerror="handleImgError(this)">
+                                <div class="info"><h3>${item.nombre || 'Sin nombre'}</h3></div>
+                            </div>
+                        `;
+                    }).join('');
+                } else {
+                    carouselContainer.innerHTML = "<p style='padding: 10px; color: #888; font-size: 13px;'>Coloca '1', '2', '3' o '4' en la columna 'puesto' para mostrar destacados aquí.</p>";
+                }
+            } else {
+                carouselSection.style.display = 'none';
+            }
+
+            if (currentCategory !== 'ALL' && !searchVal) {
+                const targetPuesto = `1 ${currentCategory.toLowerCase()}`;
+                const heroItem = allData.find(i => String(i.puesto || '').toLowerCase().trim() === targetPuesto);
+                
+                if (heroItem) {
+                    const originalIndex = allData.indexOf(heroItem);
+                    const isRecent = originalIndex < TOTAL_NEW_ITEMS;
+                    categoryHeroContainer.innerHTML = `
+                        <div class="category-hero" onclick='openModalByIndex(${originalIndex})'>
+                            ${isRecent ? '<span class="badge-new">NEW</span>' : ''}
+                            <img src="${fixImgUrl(heroItem.imagen)}" referrerpolicy="no-referrer" loading="lazy" onerror="handleImgError(this)">
+                            <div class="info">
+                                <h3>⭐ ${heroItem.nombre || 'Destacado'}</h3>
+                                <p>${heroItem.descripcion || 'Toca para ver detalles'}</p>
+                            </div>
+                        </div>
+                    `;
+                } else {
+                    categoryHeroContainer.innerHTML = '';
+                }
+            } else {
+                categoryHeroContainer.innerHTML = '';
+            }
+
             const list = document.getElementById('contentList');
-            
             if (filteredData.length === 0) {
                 list.innerHTML = "<p style='text-align:center; grid-column:1/-1; color:#888;'>No se encontraron resultados.</p>";
                 document.getElementById('pageInfo').innerText = "Página 1 de 1";
@@ -154,10 +361,12 @@
             const paginatedItems = filteredData.slice(start, end);
 
             list.innerHTML = paginatedItems.map(item => {
-                const imgSrc = (item.imagen && item.imagen.startsWith('http')) ? item.imagen : 'https://via.placeholder.com/150';
+                const originalIndex = allData.indexOf(item);
+                const isRecent = originalIndex < TOTAL_NEW_ITEMS;
                 return `
-                    <div class="card" onclick="openModal(${JSON.stringify(item).replace(/"/g, '&quot;')})">
-                        <img src="${imgSrc}" referrerpolicy="no-referrer" loading="lazy" onerror="this.onerror=null; this.src='https://via.placeholder.com/150';">
+                    <div class="card" onclick='openModalByIndex(${originalIndex})'>
+                        ${isRecent ? '<span class="badge-new">NEW</span>' : ''}
+                        <img src="${fixImgUrl(item.imagen)}" referrerpolicy="no-referrer" loading="lazy" onerror="handleImgError(this)">
                         <h3>${item.nombre || 'Sin nombre'}</h3>
                     </div>
                 `;
@@ -177,7 +386,7 @@
             const maxPages = Math.ceil(filteredData.length / itemsPerPage);
             if (currentPage + direction >= 1 && currentPage + direction <= maxPages) {
                 currentPage += direction;
-                renderList();
+                renderPage();
                 window.scrollTo({ top: 0, behavior: 'smooth' });
             }
         }
@@ -190,7 +399,7 @@
                 return matchName && matchCat;
             });
             currentPage = 1;
-            renderList();
+            renderPage();
         }
 
         function toggleMenu() {
@@ -202,28 +411,98 @@
             currentCategory = cat;
             document.querySelectorAll('.filters-dropdown button').forEach(b => b.classList.remove('active'));
             btn.classList.add('active');
-            toggleMenu(); // Cierra el menú hamburguesa automáticamente al elegir
+            toggleMenu();
             filterData();
         }
 
-        function openModal(item) {
-            document.getElementById('mImg').src = item.imagen || 'https://via.placeholder.com/150';
+        function generateButtons(rawLink, rawDrive, itemType = '') {
+            let html = '';
+
+            function parseDriveUrl(url) {
+                if (url.includes('drive.google.com')) {
+                    let idMatch = url.match(/id=([a-zA-Z0-9_-]+)/) || url.match(/\/d\/([a-zA-Z0-9_-]+)/);
+                    if (idMatch && idMatch[1]) {
+                        return `https://drive.google.com/uc?export=download&id=${idMatch[1]}`;
+                    }
+                }
+                return url;
+            }
+
+            function processLinks(linkString, isDriveSource = false) {
+                if (!linkString) return '';
+                const urls = String(linkString).split(',').map(s => s.trim()).filter(s => s.length > 0);
+                if (urls.length === 0) return '';
+
+                let mcpackCount = 0;
+                urls.forEach(u => { if (u.toLowerCase().includes('.mcpack')) mcpackCount++; });
+
+                let mcpackIndex = 0;
+                let btnHtml = '';
+
+                urls.forEach((url, idx) => {
+                    const finalUrl = isDriveSource ? parseDriveUrl(url) : url;
+                    const lowerUrl = url.toLowerCase();
+                    const lowerType = itemType.toLowerCase();
+                    let btnText = 'Descargar';
+                    let btnClass = isDriveSource ? 'btn-link btn-drive' : 'btn-link';
+
+                    const isApk = lowerType.includes('apk') || lowerUrl.includes('.apk');
+
+                    if (isApk) {
+                        btnClass += ' btn-apk';
+                        let bitLabel = '';
+                        if (lowerType.includes('64') || lowerUrl.includes('64')) bitLabel = ' (64 bits)';
+                        else if (lowerType.includes('32') || lowerUrl.includes('32')) bitLabel = ' (32 bits)';
+
+                        if (urls.length > 1) {
+                            btnText = (idx === 0) ? `Descargar APK${bitLabel} Con Música` : `Descargar APK${bitLabel} Sin Música`;
+                        } else {
+                            btnText = `Descargar APK${bitLabel}`;
+                        }
+                    } else if (lowerUrl.includes('.mctemplate')) {
+                        btnText = 'Descargar Mundo';
+                    } else if (lowerUrl.includes('.mcaddon')) {
+                        btnText = 'Descargar Addon';
+                    } else if (lowerUrl.includes('.mcpack')) {
+                        mcpackIndex++;
+                        btnText = (mcpackCount > 1 && mcpackIndex > 1) ? 'Descargar Skin' : 'Descargar Textura';
+                    } else if (lowerUrl.includes('curseforge.com')) {
+                        btnText = 'Descargar Mod (CurseForge)';
+                        btnClass += ' btn-curse';
+                    } else {
+                        btnText = isDriveSource ? 'Descargar (Drive)' : 'Descargar Directo';
+                    }
+
+                    btnHtml += `<a href="${finalUrl}" target="_blank" class="${btnClass}">${btnText}</a>`;
+                });
+
+                return btnHtml;
+            }
+
+            if (rawLink) html += processLinks(rawLink, false);
+            if (rawDrive) html += processLinks(rawDrive, true);
+
+            return html || '<p style="color:#aaa; font-size:12px; text-align:center;">No hay enlaces disponibles para este contenido.</p>';
+        }
+
+        function openModalByIndex(index) {
+            const item = allData[index];
+            if (!item) return;
+
+            const modalImg = document.getElementById('mImg');
+            modalImg.src = fixImgUrl(item.imagen);
+            modalImg.onerror = function() { handleImgError(this); };
+
             document.getElementById('mTitle').innerText = item.nombre || '';
+            document.getElementById('mType').innerText = item.tipo ? `📌 Categoría: ${item.tipo}` : '';
             document.getElementById('mDesc').innerText = item.descripcion || 'Sin descripción disponible.';
             
-            let links = '';
-            if (item.link) links += `<a href="${item.link}" target="_blank" class="btn-link">Descargar (Web)</a>`;
-            if (item.drive) {
-                let id = item.drive.match(/id=([a-zA-Z0-9_-]+)/) ? item.drive.match(/id=([a-zA-Z0-9_-]+)/)[1] : (item.drive.split('/d/')[1] ? item.drive.split('/d/')[1].split('/')[0] : '');
-                if (id) links += `<a href="https://drive.google.com/uc?export=download&id=${id}" class="btn-link btn-drive">Descargar (Drive)</a>`;
-            }
-            document.getElementById('mLinks').innerHTML = links;
+            document.getElementById('mLinks').innerHTML = generateButtons(item.link, item.drive, item.tipo || '');
             document.getElementById('itemModal').style.display = 'flex';
         }
 
         function closeModal() { document.getElementById('itemModal').style.display = 'none'; }
 
-        // Cerrar menú si se hace clic fuera de él
         window.onclick = function(event) {
             if (!event.target.matches('.menu-btn') && !event.target.closest('.filters-dropdown')) {
                 const dropdown = document.getElementById('menuDropdown');
