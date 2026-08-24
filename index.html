@@ -67,6 +67,19 @@
             font-weight: bold;
         }
 
+        /* Botón especial para redirigir al Bot */
+        .filters-dropdown button.btn-bot {
+            border-top: 1px solid #333;
+            margin-top: 6px;
+            padding-top: 10px;
+            color: #00ffcc;
+            font-weight: bold;
+        }
+        .filters-dropdown button.btn-bot:hover {
+            background: #00ffcc;
+            color: #000;
+        }
+
         .controls { max-width: 1400px; margin: 0 auto 15px auto; }
         input[type="text"] { width: 100%; padding: 12px; border-radius: 8px; border: 1px solid #333; font-size: 15px; background: rgba(20, 20, 20, 0.85); color: #fff; outline: none; }
 
@@ -118,7 +131,6 @@
 
         .section-title { font-size: 15px; color: #00ffcc; margin: 20px auto 10px auto; max-width: 1400px; text-transform: uppercase; letter-spacing: 1px; }
         
-        /* Ajuste responsivo de cuadrícula */
         .grid-container {
             display: grid;
             grid-template-columns: repeat(2, 1fr);
@@ -210,6 +222,11 @@
             <button onclick="setCategory('Skin', this)">Skins <span id="count-skin">0</span></button>
             <button onclick="setCategory('Mashup', this)">Mashups <span id="count-mashup">0</span></button>
             <button onclick="setCategory('APK', this)">APK <span id="count-apk">0</span></button>
+            
+            <!-- Botón del Bot debajo de APK -->
+            <button class="btn-bot" onclick="window.open('https://raddbot-chat.vercel.app/', '_blank')">
+                🤖 Bot Raddz aquí <span>↗</span>
+            </button>
         </div>
     </header>
 
